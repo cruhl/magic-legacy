@@ -1,0 +1,50 @@
+@import 'common';
+@import 'navigation';
+@import 'user';
+@import 'timeline';
+
+
+html, body {
+    margin: 0;
+    cursor: default;
+    background: $color-background;
+    -webkit-font-smoothing: subpixel-antialiased;
+}
+
+
+.app {
+
+    font-size: 20px;
+    font-weight: 300;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        'Roboto',
+        'Oxygen',
+        'Ubuntu',
+        'Cantarell',
+        'Fira Sans',
+        'Droid Sans',
+        'Helvetica Neue',
+        sans-serif;
+
+    color: $color-text;
+
+
+    $navigation-height: 3.3em;
+
+    padding-top: $navigation-height;
+
+    .navigation { @include navigation($navigation-height); }
+    .user.page { @include user-page(); }
+    .timeline.page { @include timeline-page; }
+    .description.page {
+        margin:
+            $spacing-app-vertical-top
+            $spacing-text-icon
+            $spacing-app-vertical-bottom
+            $spacing-text-icon;
+    }
+
+}

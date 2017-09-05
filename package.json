@@ -1,0 +1,34 @@
+{
+  "name": "eureka",
+  "description": "TODO",
+  "main": "index.js",
+  "scripts": {
+    "develop": "./node_modules/.bin/webpack-dev-server --host 0.0.0.0 --port 8000",
+    "build": "npm run build-content && ./node_modules/.bin/webpack",
+    "deploy": "npm run build && firebase deploy --only hosting",
+    "clean": "./node_modules/.bin/rimraf ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:cruhl/eureka.git"
+  },
+  "keywords": [
+    "devops",
+    "f5"
+  ],
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "css-loader": "^0.26.1",
+    "elm": "^0.18.0",
+    "elm-webpack-loader": "^3.1.0",
+    "file-loader": "^0.9.0",
+    "json-loader": "^0.5.4",
+    "node-sass": "^4.5.3",
+    "rimraf": "^2.5.4",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-middleware": "^1.8.2",
+    "webpack-dev-server": "^1.16.1"
+  }
+}

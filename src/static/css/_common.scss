@@ -1,0 +1,227 @@
+// # variables
+
+
+// ## colors
+
+$color-pink: hsl(348, 90%, 66%);
+$color-red: hsl(1, 87%, 64%);
+$color-orange: hsl(28, 92%, 67%);
+$color-green: hsl(94, 60%, 66%);
+$color-blue: hsl(216, 89%, 71%);
+
+$color-background:
+    adjust-color($color-blue, $lightness: 26%, $saturation: -40%);
+
+$color-background-secondary: darken($color-background, 4%);
+
+$color-text: adjust-color($color-blue, $saturation: -65%, $lightness: -25%);
+$color-text-muted: lighten($color-text, 20%);
+
+$color-pass-through-opacity: 0.8;
+
+@function color-pass-through($color) {
+    @return transparentize($color, 1 - $color-pass-through-opacity);
+}
+
+// ## z-indexing
+
+$z-scale: 10;
+
+$z-level-navigation: $z-scale * 1;
+
+// ## spacing
+
+$spacing-panel-horizontal: 1.3em;
+$spacing-panel-vertical: 1em;
+
+$spacing-block-horizontal: 0.9em;
+$spacing-block-vertical: 0.7em;
+
+$spacing-app-horizontal: 1.1em;
+$spacing-app-vertical-top: $spacing-panel-vertical;
+$spacing-app-vertical-bottom: $spacing-panel-vertical * 2;
+
+$spacing-text-icon: 0.38em;
+$spacing-border-radius: 0.2em;
+
+
+// # mixins
+
+@mixin gradient-diagonal($color-from, $color-to) {
+    background-image: linear-gradient(to top left, $color-from, $color-to);
+}
+
+$gradient-hue-difference: 12;
+
+@mixin gradient-default($color) {
+    @include gradient-diagonal(
+        adjust-color($color, $hue: $gradient-hue-difference),
+        adjust-color($color, $hue: -$gradient-hue-difference)
+    );
+}
+
+@mixin gradient-default-inverted($color) {
+    @include gradient-diagonal(
+        adjust-color($color, $hue: -$gradient-hue-difference),
+        adjust-color($color, $hue: $gradient-hue-difference)
+    );
+}
+
+@mixin gradient-white {
+    @include gradient-diagonal(lighten($color-background, 3%), white);
+}
+
+
+@mixin box-shadow-default($color) {
+    box-shadow: 0 0.15em 0.1em transparentize($color, 0.87);
+}
+
+@mixin box-shadow-large($color) {
+    box-shadow: 0 0.25em 0.5em transparentize($color, 0.77);
+}
+
+
+@mixin text-shadow($color, $size) {
+    text-shadow: 0 ($size / 3) $size $color;
+}
+
+@mixin text-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@mixin text-shorter-lines { line-height: 1.05em; }
+
+@mixin text-color-pass-through($color) {
+    color: color-pass-through($color);
+}
+
+@mixin text-color-pass-through-extra($color) {
+    @include text-color-pass-through(transparentize($color, 0.5));
+}
+
+
+@mixin panel {
+    overflow: hidden;
+    border-radius: $spacing-border-radius;
+    @include gradient-white;
+    @include box-shadow-default($color-blue);
+}
+
+
+// # elements
+
+
+.text-link, article a {
+
+    $spacing-for-icon: 1em;
+
+    position: relative;
+    display: inline-block;
+
+    border-bottom: solid 0.15em color-pass-through($color-blue);
+
+    text-decoration: none;
+    color: $color-blue;
+
+    .icon {
+
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+
+        transform: translateY(0.14em);
+
+        color: color-pass-through($color-blue);
+
+    }
+
+    &.icon-left {
+        margin-left: $spacing-for-icon;
+        .icon { left: -$spacing-for-icon; }
+    }
+
+    &.icon-right {
+        margin-right: $spacing-for-icon;
+        .icon { right: -$spacing-for-icon; }
+    }
+
+}
+
+
+.button {
+
+    display: inline-block;
+    padding: $spacing-block-vertical $spacing-block-horizontal;
+
+    border-radius: 10em;
+    @include gradient-default($color-green);
+    @include box-shadow-default($color-green);
+
+    // font-weight: bold;
+    text-decoration: none;
+    color: hsla(0, 0%, 100%, $color-pass-through-opacity);
+
+    &.icon-left {
+        // padding-left: $spacing-block-horizontal * 0.7;
+        .icon { margin-right: $spacing-text-icon; }
+    }
+
+    &.icon-right {
+        // padding-right: $padding-sides * 0.7;
+        .icon { margin-left: $spacing-text-icon; }
+    }
+
+    &.blue {
+        @include gradient-default($color-blue);
+        @include box-shadow-default($color-blue);
+    }
+
+    .icon { color: hsla(0, 0%, 100%, $color-pass-through-opacity / 2); }
+
+}
+
+
+article {
+
+    padding:
+        ($spacing-panel-vertical * 1.5)
+        $spacing-panel-horizontal
+        ($spacing-panel-vertical * 3)
+        $spacing-panel-horizontal;
+
+    background: lighten($color-background, 5%);
+    @include box-shadow-default($color-blue);
+
+    :first-child { margin-top: 0; }
+    :last-child { margin-bottom: 0; }
+
+    h1 {
+        margin: 1.4em 0 0 0;
+        font-size: 2.2em;
+        font-weight: 200;
+    }
+
+    h2 {
+        margin: 1.2em 0 0 0;
+        font-size: 1.2em;
+        font-weight: 400;
+    }
+
+    h3, h4, h5, h6 {
+        margin: 1em 0 0 0;
+        font-size: 1em;
+        font-weight: inherit;
+        color: $color-text-muted;
+    }
+
+    p {
+        margin: 1em 0;
+        font-size: 0.9em;
+        line-height: 1.4em;
+    }
+
+}

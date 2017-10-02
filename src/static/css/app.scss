@@ -1,1 +1,17 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: black;
+}
 
+.light {
+  position: absolute;
+  top: 200px;
+  left: 200px;
+  width: 10px;
+  height: 10px;
+
+  border-radius: 100%;
+  background: white;
+}

@@ -1,12 +1,17 @@
 module State.Model exposing (Model, init)
 
+import Color
+import Tuple
+import Types.Light exposing (Light)
 import Utils.Tuple exposing (..)
 
 
 type alias Model =
-    String
+    Light
 
 
 init : ( Model, Cmd msg )
 init =
-    "Test" => Cmd.none
+    Color.hsla 0 207 100 50
+        |> Light
+        => Cmd.none

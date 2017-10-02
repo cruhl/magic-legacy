@@ -1,7 +1,16 @@
-module Types.Light exposing (Light)
+module Types.Light exposing (Light, Position)
 
 import Color exposing (Color)
 
 
 type alias Light =
-    { color : Color }
+    { tags : List String
+    , position : Position
+    , color : Color
+    }
+
+
+type alias Position =
+    { x : Float
+    , y : Float
+    }

@@ -1,4 +1,4 @@
-require('./static/css/app.scss')
-require('./static/index.html')
+require("./static/css/app.scss");
+require("./static/index.html");
 
-require('./elm/Main.elm').Main.embed(document.getElementById('main'))
+require("./elm/Main.elm").Main.embed(document.getElementById("main"));

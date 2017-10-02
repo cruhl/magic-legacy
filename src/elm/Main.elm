@@ -13,5 +13,5 @@ main =
         { init = init
         , subscriptions = \_ -> Sub.none
         , update = update
-        , view = view
+        , view = \_ -> view
         }

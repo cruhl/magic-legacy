@@ -1,5 +1,7 @@
 module State.Msg exposing (Msg(..))
 
+import Color exposing (Color)
+
 
 type Msg
-    = ChangeColor
+    = SetLights (List String) Color

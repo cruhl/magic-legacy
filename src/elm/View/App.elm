@@ -3,17 +3,15 @@ module View.App exposing (view)
 import Color exposing (Color)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
 import State.Model exposing (Model)
-import State.Msg exposing (Msg(ChangeColor))
 import String
 import Types.Light as Light exposing (Light)
 import Utils.Tuple exposing ((=>))
 
 
-view : Model -> Html Msg
+view : Model -> Html msg
 view { lights } =
-    div [ class "app", onClick ChangeColor ]
+    div [ class "app" ]
         [ lights
             |> List.map light
             |> List.concat

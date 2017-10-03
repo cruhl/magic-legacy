@@ -1,14 +1,13 @@
-const path = require('path')
+const path = require("path");
 
 module.exports = {
-
   entry: {
-    app: ['./src/index.js']
+    app: ["./src/index.js"]
   },
 
   output: {
     path: path.resolve(`${__dirname}/dist`),
-    filename: '[name].js'
+    filename: "[name].js"
   },
 
   module: {
@@ -16,21 +15,21 @@ module.exports = {
       {
         test: /\.elm$/,
         exclude: [/elm-stuff/, /node_modules/],
-        loader: 'elm-webpack?verbose=true&warn=true'
-        // loader: 'elm-webpack?verbose=true&warn=true&debug=true'
+        // loader: 'elm-webpack?verbose=true&warn=true'
+        loader: "elm-webpack?verbose=true&warn=true&debug=true"
       },
       {
         test: /\.html$/,
         exclude: /node_modules/,
-        loader: 'file?name=[name].[ext]'
+        loader: "file?name=[name].[ext]"
       },
       {
         test: /\.(css|scss)$/,
-        loaders: ['style', 'css', 'sass']
+        loaders: ["style", "css", "sass"]
       },
       {
         test: /\.json$/,
-        loaders: ['json-loader']
+        loaders: ["json-loader"]
       }
     ],
 
@@ -43,5 +42,4 @@ module.exports = {
       colors: true
     }
   }
-
-}
+};

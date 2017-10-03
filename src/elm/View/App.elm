@@ -1,6 +1,7 @@
 module View.App exposing (view)
 
 import Color exposing (Color)
+import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import State.Model exposing (Model)
@@ -13,6 +14,7 @@ view : Model -> Html msg
 view { lights } =
     div [ class "app" ]
         [ lights
+            |> Dict.toList
             |> List.map light
             |> List.concat
             |> List.append [ div [ class "background" ] [] ]
@@ -20,12 +22,13 @@ view { lights } =
         ]
 
 
-light : Light -> List (Html msg)
-light { status, position, color } =
+light : ( String, Light ) -> List (Html msg)
+light ( id, { status, position, color } ) =
     let
         lightElement attributes =
             div <|
-                [ style
+                [ title id
+                , style
                     [ "top" => toString position.y ++ "px"
                     , "left" => toString position.x ++ "px"
                     ]

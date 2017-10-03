@@ -4,8 +4,7 @@ import Color exposing (Color)
 
 
 type alias Light =
-    { tags : List String
-    , status : Status
+    { status : Status
     , position : Position
     , color : Color
     }

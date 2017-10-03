@@ -3,49 +3,71 @@ module View.App exposing (view)
 import Color exposing (Color)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import State.Model exposing (Model)
+import State.Msg exposing (Msg(ChangeColor))
 import String
-import Types.Light exposing (Light, Position)
+import Types.Light as Light exposing (Light)
 import Utils.Tuple exposing ((=>))
 
 
-view : Model -> Html msg
-view model =
-    div [ class "app" ]
-        [ model
+view : Model -> Html Msg
+view { lights } =
+    div [ class "app", onClick ChangeColor ]
+        [ lights
             |> List.map light
             |> List.concat
+            |> List.append [ div [ class "background" ] [] ]
             |> div [ class "scene" ]
         ]
 
 
 light : Light -> List (Html msg)
-light { position, color } =
+light { status, position, color } =
     let
-        positioning =
-            style
-                [ "top" => toString position.y ++ "px"
-                , "left" => toString position.x ++ "px"
+        lightElement attributes =
+            div <|
+                [ style
+                    [ "top" => toString position.y ++ "px"
+                    , "left" => toString position.x ++ "px"
+                    ]
                 ]
+                    ++ attributes
 
-        { red, blue, green, alpha } =
-            Color.toRgb color
-
-        colorCss =
-            [ toFloat red
-            , toFloat green
-            , toFloat blue
-            , alpha
-            ]
-                |> List.map toString
-                |> List.intersperse ", "
-                |> String.concat
-                |> (\values -> "rgba(" ++ values ++ ")")
+        overlay attributes =
+            lightElement <| [ class "overlay" ] ++ attributes
     in
-    [ div [ class "bulb", positioning, style [ "background" => colorCss ] ] []
-    , div [ class "glow", positioning, glow colorCss ] []
-    , div [ class "overlay", positioning ] []
-    ]
+    case status of
+        Light.Enabled ->
+            let
+                { red, blue, green, alpha } =
+                    Color.toRgb <|
+                        if status /= Light.Enabled then
+                            Color.rgba 255 255 255 0.3
+                        else
+                            color
+
+                colorCss =
+                    [ toFloat red
+                    , toFloat green
+                    , toFloat blue
+                    , alpha
+                    ]
+                        |> List.map toString
+                        |> List.intersperse ", "
+                        |> String.concat
+                        |> (\values -> "rgba(" ++ values ++ ")")
+
+                background =
+                    style [ "background" => colorCss ]
+            in
+            [ lightElement [ class "bulb", background ] []
+            , lightElement [ class "glow", glow colorCss ] []
+            , overlay [] []
+            ]
+
+        Light.Disabled ->
+            [ overlay [ class "disabled" ] [] ]
 
 
 glow : String -> Html.Attribute msg

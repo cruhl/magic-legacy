@@ -15,4 +15,5 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    { lights = Data.Lights.default } => Script.toCmd Data.Scripts.showRooms
+    { lights = Data.Lights.default }
+        => Script.toCmd Data.Scripts.showRooms

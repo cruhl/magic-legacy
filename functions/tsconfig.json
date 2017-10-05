@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "sourceMap": true,
+    "outDir": "./build",
+    "target": "es5",
+    "moduleResolution": "node",
+    "lib": ["es2015"]
+  }
+}

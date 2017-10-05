@@ -1,6 +1,7 @@
-elm-stuff/
 node_modules/
 
-dist/
+functions/build/
+ui/build/
+ui/elm-stuff/
 
 *.log

@@ -1,0 +1,15 @@
+{
+  "name": "magic-infrastructure",
+  "version": "1.0.0",
+  "description": "infrastructure for magic",
+  "scripts": {
+    "format": "terraform fmt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:cruhl/magic.git"
+  },
+  "author": "cruhl",
+  "license": "ISC",
+  "devDependencies": {}
+}

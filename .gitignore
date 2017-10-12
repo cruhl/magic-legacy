@@ -1,9 +1,8 @@
-node_modules
 .terraform
 
-functions/build
+node_modules
+elm-stuff
 
-ui/build
-ui/elm-stuff
+build
 
 *.log

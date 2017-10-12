@@ -1,16 +1,18 @@
-import * as aws from "aws-sdk";
-import { Handler, APIGatewayEvent, Context, Callback } from "aws-lambda";
+import {
+  ProxyHandler,
+  APIGatewayEvent,
+  Context,
+  ProxyCallback
+} from "aws-lambda";
 
-aws.APIGateway.Types;
-
-export const generateTwiml: Handler = (
+export const generateTwiml: ProxyHandler = (
   event: APIGatewayEvent,
   context: Context,
-  callback: Callback
+  callback: ProxyCallback
 ) => {
   const response = {
     statusCode: 200,
-    contentType: "application/json",
+    headers: { contentType: "application/json" },
     body: JSON.stringify({ message: "Success!" })
   };
 

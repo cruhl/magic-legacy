@@ -16,16 +16,28 @@ resource "aws_api_gateway_resource" "calls" {
   path_part   = "calls"
 }
 
+resource "aws_api_gateway_resource" "recordings" {
+  rest_api_id = "${aws_api_gateway_rest_api.api.id}"
+  parent_id   = "${aws_api_gateway_resource.calls.id}"
+  path_part   = "recordings"
+}
+
+resource "aws_api_gateway_resource" "generate_twiml" {
+  rest_api_id = "${aws_api_gateway_rest_api.api.id}"
+  parent_id   = "${aws_api_gateway_resource.recordings.id}"
+  path_part   = "twiml"
+}
+
 resource "aws_api_gateway_method" "generate_twiml" {
   rest_api_id   = "${aws_api_gateway_rest_api.api.id}"
-  resource_id   = "${aws_api_gateway_resource.calls.id}"
+  resource_id   = "${aws_api_gateway_resource.generate_twiml.id}"
   http_method   = "GET"
   authorization = "NONE"
 }
 
 resource "aws_api_gateway_integration" "generate_twiml" {
   rest_api_id             = "${aws_api_gateway_rest_api.api.id}"
-  resource_id             = "${aws_api_gateway_resource.calls.id}"
+  resource_id             = "${aws_api_gateway_resource.generate_twiml.id}"
   http_method             = "${aws_api_gateway_method.generate_twiml.http_method}"
   integration_http_method = "POST"
   type                    = "AWS_PROXY"

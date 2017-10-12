@@ -10,6 +10,7 @@ export const generateTwiml: ProxyHandler = (
   context: Context,
   callback: ProxyCallback
 ) => {
+  console.log("w");
   const response = {
     statusCode: 200,
     headers: { contentType: "application/json" },

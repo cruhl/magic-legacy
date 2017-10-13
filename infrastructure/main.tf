@@ -1,9 +1,18 @@
+data "aws_caller_identity" "current" {}
+
 provider "aws" {
   region = "${var.region}"
 }
 
 resource "aws_s3_bucket" "recordings" {
   bucket = "${var.project_prefix}-recordings"
+}
+
+resource "aws_api_gateway_deployment" "api" {
+  depends_on = ["aws_api_gateway_method.generate_twiml", "aws_lambda_function.generate_twiml"]
+
+  rest_api_id = "${aws_api_gateway_rest_api.api.id}"
+  stage_name  = "prod"
 }
 
 resource "aws_api_gateway_rest_api" "api" {
@@ -44,11 +53,20 @@ resource "aws_api_gateway_integration" "generate_twiml" {
   uri                     = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.generate_twiml.arn}/invocations"
 }
 
+resource "aws_lambda_permission" "generate_twiml" {
+  function_name = "${aws_lambda_function.generate_twiml.function_name}"
+  statement_id  = "AllowExecutionFromApiGateway"
+  action        = "lambda:InvokeFunction"
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.generate_twiml.http_method}${aws_api_gateway_resource.generate_twiml.path}"
+}
+
 resource "aws_lambda_function" "generate_twiml" {
   function_name    = "generateTwiml"
   handler          = "index.generateTwiml"
-  runtime          = "nodejs6.10"
   filename         = "../functions/build.zip"
+  runtime          = "nodejs6.10"
+  memory_size      = 512
   source_code_hash = "${data.archive_file.functions_zip_file.output_base64sha256}"
   role             = "${aws_iam_role.lambda_role.arn}"
 }
@@ -72,14 +90,6 @@ data "aws_iam_policy_document" "lambda_role_policy" {
       ]
     }
   }
-}
-
-resource "aws_lambda_permission" "generate_twiml" {
-  statement_id  = "AllowExecutionFromAPIGateway"
-  action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.generate_twiml.arn}"
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.region}:${var.account_id}:${aws_api_gateway_rest_api.api.id}/*/${aws_api_gateway_method.generate_twiml.http_method}${aws_api_gateway_resource.calls.path}"
 }
 
 data "archive_file" "functions_zip_file" {

@@ -19,13 +19,6 @@ module.exports = {
   output: {
     filename: "index.js",
     path: path.resolve(__dirname, "build"),
-    library: "index",
-    libraryTarget: "commonjs2"
-  },
-  devServer: {
-    inline: true,
-    stats: {
-      colors: true
-    }
+    libraryTarget: "commonjs"
   }
 };

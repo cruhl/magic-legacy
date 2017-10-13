@@ -40,7 +40,7 @@ resource "aws_api_gateway_resource" "generate_twiml" {
 resource "aws_api_gateway_method" "generate_twiml" {
   rest_api_id   = "${aws_api_gateway_rest_api.api.id}"
   resource_id   = "${aws_api_gateway_resource.generate_twiml.id}"
-  http_method   = "GET"
+  http_method   = "POST"
   authorization = "NONE"
 }
 

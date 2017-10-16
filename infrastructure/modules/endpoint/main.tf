@@ -2,6 +2,14 @@ variable "name" {}
 variable "handler" {}
 variable "http_method" {}
 
+variable "environment_variables" {
+  type = "map"
+
+  default = {
+    NO_ENVIRONMENT_VARIABLES = true
+  }
+}
+
 variable "source_hash" {}
 
 variable "region" {}
@@ -37,11 +45,18 @@ resource "aws_lambda_permission" "permission" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  function_name    = "${var.name}"
-  handler          = "${var.handler}"
+  function_name = "${var.name}"
+  handler       = "${var.handler}"
+
   filename         = "../functions/build.zip"
-  runtime          = "nodejs6.10"
-  memory_size      = 512
   source_code_hash = "${var.source_hash}"
-  role             = "${var.role_arn}"
+
+  runtime     = "nodejs6.10"
+  memory_size = 512
+
+  role = "${var.role_arn}"
+
+  environment = {
+    variables = "${var.environment_variables}"
+  }
 }

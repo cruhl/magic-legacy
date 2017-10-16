@@ -5,3 +5,7 @@ variable "region" {
 variable "project_prefix" {
   default = "cruhl-magic"
 }
+
+variable "stage" {
+  default = "prod"
+}

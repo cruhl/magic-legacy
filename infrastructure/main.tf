@@ -13,7 +13,7 @@ resource "aws_api_gateway_deployment" "api" {
   ]
 
   rest_api_id = "${aws_api_gateway_rest_api.api.id}"
-  stage_name  = "prod"
+  stage_name  = "${var.stage}"
 }
 
 resource "aws_api_gateway_rest_api" "api" {
@@ -32,6 +32,11 @@ module "incoming_twilio_call" {
   name        = "incoming-twilio-call"
   handler     = "index.incomingTwilioCall"
   http_method = "POST"
+
+  environment_variables = {
+    API_URL = "https://wju17jy9gb.execute-api.us-east-2.amazonaws.com/${var.stage}"
+    SAVE_RECORDING_PATH = "${aws_api_gateway_resource.calls.path}"
+  }
 
   source_hash = "${data.archive_file.lambda_zip_file.output_base64sha256}"
 

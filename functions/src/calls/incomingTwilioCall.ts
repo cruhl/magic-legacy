@@ -7,7 +7,7 @@ import {
 
 import { twiml } from "twilio";
 
-export const generateTwiml: ProxyHandler = (
+export const incomingTwilioCall: ProxyHandler = (
   event: APIGatewayEvent,
   context: Context,
   callback: ProxyCallback

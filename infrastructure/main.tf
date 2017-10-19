@@ -6,6 +6,14 @@ resource "aws_s3_bucket" "recordings" {
   bucket = "${var.project_prefix}-recordings"
 }
 
+data "aws_iam_policy_document" "recordings_upload_policy_document" {
+  statement {
+    effect    = "Allow"
+    actions   = ["s3:PutObject"]
+    resources = ["${aws_s3_bucket.recordings.arn}"]
+  }
+}
+
 resource "aws_api_gateway_deployment" "api" {
   depends_on = [
     "module.incoming_twilio_call",
@@ -34,8 +42,8 @@ module "incoming_twilio_call" {
   http_method = "POST"
 
   environment_variables = {
-    API_URL = "https://wju17jy9gb.execute-api.us-east-2.amazonaws.com/${var.stage}"
-    SAVE_RECORDING_PATH = "${aws_api_gateway_resource.calls.path}"
+    API_URL             = "https://vnetkniiah.execute-api.us-east-2.amazonaws.com/${var.stage}"
+    SAVE_RECORDING_PATH = "${aws_api_gateway_resource.recordings.path}"
   }
 
   source_hash = "${data.archive_file.lambda_zip_file.output_base64sha256}"
@@ -44,7 +52,7 @@ module "incoming_twilio_call" {
   api_id        = "${aws_api_gateway_rest_api.api.id}"
   resource_id   = "${aws_api_gateway_resource.calls.id}"
   resource_path = "${aws_api_gateway_resource.calls.path}"
-  role_arn      = "${aws_iam_role.api_gateway_lambda_role.arn}"
+  role_arn      = "${aws_iam_role.lambda_role.arn}"
 }
 
 resource "aws_api_gateway_resource" "recordings" {
@@ -66,26 +74,26 @@ module "save_twilio_call" {
   api_id        = "${aws_api_gateway_rest_api.api.id}"
   resource_id   = "${aws_api_gateway_resource.recordings.id}"
   resource_path = "${aws_api_gateway_resource.recordings.path}"
-  role_arn      = "${aws_iam_role.api_gateway_lambda_role.arn}"
+  role_arn      = "${aws_iam_role.lambda_role.arn}"
+
+  environment_variables = {
+    RECORDINGS_S3_BUCKET_ID = "${aws_s3_bucket.recordings.id}"
+  }
 }
 
-resource "aws_iam_role" "api_gateway_lambda_role" {
-  name               = "api-gateway-lambda-role"
-  assume_role_policy = "${data.aws_iam_policy_document.api_gateway_lambda_role_policy.json}"
+resource "aws_iam_role" "lambda_role" {
+  name               = "lambda-role"
+  assume_role_policy = "${data.aws_iam_policy_document.lambda_role_policy_document.json}"
 }
 
-data "aws_iam_policy_document" "api_gateway_lambda_role_policy" {
+data "aws_iam_policy_document" "lambda_role_policy_document" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
 
     principals {
-      type = "Service"
-
-      identifiers = [
-        "lambda.amazonaws.com",
-        "apigateway.amazonaws.com",
-      ]
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
     }
   }
 }

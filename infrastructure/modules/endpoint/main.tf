@@ -37,11 +37,11 @@ resource "aws_api_gateway_integration" "integration" {
 }
 
 resource "aws_lambda_permission" "permission" {
+  source_arn    = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${var.api_id}/*/${aws_api_gateway_method.method.http_method}${var.resource_path}"
   function_name = "${aws_lambda_function.lambda_function.function_name}"
   statement_id  = "AllowExecutionFromApiGateway"
   action        = "lambda:InvokeFunction"
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.region}:${data.aws_caller_identity.current.account_id}:${var.api_id}/*/${aws_api_gateway_method.method.http_method}${var.resource_path}"
 }
 
 resource "aws_lambda_function" "lambda_function" {

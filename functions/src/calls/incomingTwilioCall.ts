@@ -7,11 +7,11 @@ import {
 
 import { twiml } from "twilio";
 
-export const incomingTwilioCall: ProxyHandler = (
+export function incomingTwilioCall<ProxyHandler>(
   event: APIGatewayEvent,
   context: Context,
   callback: ProxyCallback
-) => {
+) {
   const call = new twiml.VoiceResponse();
 
   const { API_URL, SAVE_RECORDING_PATH } = process.env;
@@ -23,11 +23,9 @@ export const incomingTwilioCall: ProxyHandler = (
 
   call.hangup();
 
-  const response = {
+  return callback(null, {
     statusCode: 200,
     headers: { "Content-Type": "text/xml" },
     body: call.toString()
-  };
-
-  callback(null, response);
-};
+  });
+}

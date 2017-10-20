@@ -14,11 +14,10 @@ export function incomingTwilioCall<ProxyHandler>(
 ) {
   const call = new twiml.VoiceResponse();
 
-  const { API_URL, SAVE_RECORDING_PATH } = process.env;
+  const { API_URL, API_SAVE_RECORDING_PATH } = process.env;
 
   call.record({
-    playBeep: false,
-    recordingStatusCallback: `${API_URL}${SAVE_RECORDING_PATH}`
+    recordingStatusCallback: `${API_URL}${API_SAVE_RECORDING_PATH}`
   });
 
   call.hangup();

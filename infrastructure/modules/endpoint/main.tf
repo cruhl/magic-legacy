@@ -4,10 +4,6 @@ variable "http_method" {}
 
 variable "environment_variables" {
   type = "map"
-
-  default = {
-    NO_ENVIRONMENT_VARIABLES = true
-  }
 }
 
 variable "source_hash" {}

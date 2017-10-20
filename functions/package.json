@@ -3,8 +3,7 @@
   "description": "functions for magic",
   "version": "1.0.0",
   "scripts": {
-    "dev":
-      "concurrently \"webpack --progress --colors --watch\" \"nodemon build/index.js\"",
+    "dev": "concurrently \"tsc --watch\" \"nodemon build/index.js\"",
     "build": "npm run clean && webpack",
     "clean": "rimraf build build.zip"
   },
@@ -17,11 +16,14 @@
   "dependencies": {
     "aws-sdk": "^2.131.0",
     "axios": "^0.16.2",
+    "query-string": "^5.0.0",
     "twilio": "^3.7.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "0.0.17",
     "@types/node": "^8.0.34",
+    "@types/query-string": "^5.0.0",
+    "concurrently": "^3.5.0",
     "nodemon": "^1.12.1",
     "rimraf": "^2.6.2",
     "ts-loader": "^2.3.7",

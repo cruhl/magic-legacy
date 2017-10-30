@@ -50,7 +50,7 @@ resource "aws_api_gateway_resource" "calls" {
 }
 
 module "incoming_twilio_call" {
-  source = "./modules/endpoint"
+  source = "./modules/api_lambda"
 
   name        = "incoming-twilio-call"
   handler     = "index.incomingTwilioCall"
@@ -77,7 +77,7 @@ resource "aws_api_gateway_resource" "recordings" {
 }
 
 module "save_twilio_call" {
-  source = "./modules/endpoint"
+  source = "./modules/api_lambda"
 
   name        = "save-twilio-call"
   handler     = "index.saveTwilioCall"

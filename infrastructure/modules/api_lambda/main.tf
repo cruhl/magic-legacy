@@ -1,19 +1,3 @@
-variable "name" {}
-variable "handler" {}
-variable "http_method" {}
-
-variable "environment_variables" {
-  type = "map"
-}
-
-variable "source_hash" {}
-
-variable "region" {}
-variable "api_id" {}
-variable "resource_id" {}
-variable "resource_path" {}
-variable "role_arn" {}
-
 data "aws_caller_identity" "current" {}
 
 resource "aws_api_gateway_method" "method" {

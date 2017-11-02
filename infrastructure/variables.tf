@@ -9,6 +9,6 @@ variable "project_prefix" {
   default = "cruhl-magic"
 }
 
-variable "stage" {
+variable "api_stage" {
   default = "prod"
 }

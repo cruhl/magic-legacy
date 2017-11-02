@@ -7,9 +7,19 @@ module "recordings_s3_bucket" {
   project_prefix = "${var.project_prefix}"
 }
 
+resource "aws_api_gateway_deployment" "api_deployment" {
+  stage_name  = "${var.api_stage}"
+  rest_api_id = "${module.api_gateway.id}"
+
+  depends_on = [
+    "module.api_gateway",
+    "module.incoming_twilio_call",
+    "module.save_twilio_call",
+  ]
+}
+
 module "api_gateway" {
   source = "./modules/api_gateway"
-  stage  = "prod"
 }
 
 module "incoming_twilio_call" {
@@ -17,14 +27,14 @@ module "incoming_twilio_call" {
 
   api_id      = "${module.api_gateway.id}"
   resource_id = "${module.api_gateway.calls_resource_id}"
-  http_method = "POST"
+  http_method = "${module.api_gateway.calls_http_method}"
 
   name        = "incoming-twilio-call"
   handler     = "index.incomingTwilioCall"
   source_hash = "${data.archive_file.lambda_zip_file.output_base64sha256}"
 
   environment_variables = {
-    API_URL                 = "https://0dw5hfj6a1.execute-api.us-east-2.amazonaws.com/${var.stage}"
+    API_URL                 = "https://ozhzxmq19c.execute-api.us-east-2.amazonaws.com/${var.api_stage}"
     API_SAVE_RECORDING_PATH = "${module.api_gateway.recordings_path}"
   }
 

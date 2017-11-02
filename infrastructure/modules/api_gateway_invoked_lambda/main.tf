@@ -25,15 +25,8 @@ resource "aws_lambda_permission" "permission" {
   principal     = "apigateway.amazonaws.com"
 }
 
-resource "aws_api_gateway_method" "method" {
-  rest_api_id   = "${var.api_id}"
-  resource_id   = "${var.resource_id}"
-  http_method   = "${var.http_method}"
-  authorization = "NONE"
-}
-
 resource "aws_api_gateway_integration" "integration" {
-  http_method = "${aws_api_gateway_method.method.http_method}"
+  http_method = "${var.http_method}"
 
   uri  = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.lambda_function.arn}/invocations"
   type = "AWS_PROXY"

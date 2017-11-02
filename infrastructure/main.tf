@@ -2,100 +2,69 @@ provider "aws" {
   region = "${var.region}"
 }
 
-module "recordings_bucket" {
-  source = "./modules/recordings_bucket"
+module "recordings_s3_bucket" {
+  source         = "./modules/recordings_s3_bucket"
   project_prefix = "${var.project_prefix}"
-  lambda_allow_assume_role_policy_document_json = "${module.lambda_allow_assume_role.lambda_allow_assume_role_policy_document_json}"
 }
 
-resource "aws_api_gateway_deployment" "api" {
-  depends_on = [
-    "module.incoming_twilio_call",
-    "module.save_twilio_call",
-  ]
-
-  rest_api_id = "${aws_api_gateway_rest_api.api.id}"
-  stage_name  = "${var.stage}"
-}
-
-resource "aws_api_gateway_rest_api" "api" {
-  name = "api"
-}
-
-resource "aws_api_gateway_resource" "calls" {
-  rest_api_id = "${aws_api_gateway_rest_api.api.id}"
-  parent_id   = "${aws_api_gateway_rest_api.api.root_resource_id}"
-  path_part   = "calls"
+module "api_gateway" {
+  source = "./modules/api_gateway"
+  stage  = "prod"
 }
 
 module "incoming_twilio_call" {
-  source = "./modules/api_lambda"
+  source = "./modules/api_gateway_invoked_lambda"
+
+  api_id      = "${module.api_gateway.id}"
+  resource_id = "${module.api_gateway.calls_resource_id}"
+  http_method = "POST"
 
   name        = "incoming-twilio-call"
   handler     = "index.incomingTwilioCall"
-  http_method = "POST"
+  source_hash = "${data.archive_file.lambda_zip_file.output_base64sha256}"
 
   environment_variables = {
     API_URL                 = "https://0dw5hfj6a1.execute-api.us-east-2.amazonaws.com/${var.stage}"
-    API_SAVE_RECORDING_PATH = "${aws_api_gateway_resource.recordings.path}"
+    API_SAVE_RECORDING_PATH = "${module.api_gateway.recordings_path}"
   }
 
-  source_hash = "${data.archive_file.lambda_zip_file.output_base64sha256}"
-
-  region        = "${var.region}"
-  api_id        = "${aws_api_gateway_rest_api.api.id}"
-  resource_id   = "${aws_api_gateway_resource.calls.id}"
-  resource_path = "${aws_api_gateway_resource.calls.path}"
-  role_arn      = "${module.lambda_allow_assume_role.arn}"
+  region   = "${var.region}"
+  role_arn = "${aws_iam_role.lambda_allow_assume_role.arn}"
 }
 
-resource "aws_api_gateway_resource" "recordings" {
-  rest_api_id = "${aws_api_gateway_rest_api.api.id}"
-  parent_id   = "${aws_api_gateway_rest_api.api.root_resource_id}"
-  path_part   = "recordings"
+resource "aws_iam_role" "lambda_allow_assume_role" {
+  name               = "${var.project_prefix}-lambda-allow-assume-role"
+  assume_role_policy = "${module.lambda_trust_document.json}"
+}
+
+module "lambda_trust_document" {
+  source = "./modules/lambda_trust_document"
 }
 
 module "save_twilio_call" {
-  source = "./modules/api_lambda"
+  source = "./modules/api_gateway_invoked_lambda"
+
+  api_id      = "${module.api_gateway.id}"
+  resource_id = "${module.api_gateway.recordings_resource_id}"
+  http_method = "POST"
 
   name        = "save-twilio-call"
   handler     = "index.saveTwilioCall"
-  http_method = "POST"
-
   source_hash = "${data.archive_file.lambda_zip_file.output_base64sha256}"
 
-  region        = "${var.region}"
-  api_id        = "${aws_api_gateway_rest_api.api.id}"
-  resource_id   = "${aws_api_gateway_resource.recordings.id}"
-  resource_path = "${aws_api_gateway_resource.recordings.path}"
-  role_arn      = "${module.recordings_bucket.lambda_upload_role_arn}"
-
   environment_variables = {
-    RECORDINGS_S3_BUCKET_ID = "${module.recordings_bucket.bucket_id}"
+    RECORDINGS_S3_BUCKET_ID = "${module.recordings_s3_bucket.id}"
   }
+
+  region   = "${var.region}"
+  role_arn = "${module.role_for_recordings_uploads.arn}"
 }
 
-resource "aws_iam_role_policy_attachment" "policy_attachment" {
-  role       = "${aws_iam_role.upload_role.name}"
-  policy_arn = "${aws_iam_policy.upload_policy.arn}"
-}
+module "role_for_recordings_uploads" {
+  source = "./modules/role_for_recordings_uploads"
 
-resource "aws_iam_role" "lambda_upload_role" {
-  name               = "${var.project_prefix}-recordings-upload-role"
-  assume_role_policy = "${var.lambda_allow_assume_role_document}"
-}
-
-resource "aws_iam_policy" "upload_policy" {
-  name   = "${var.project_prefix}-recordings-upload-policy"
-  policy = "${data.aws_iam_policy_document.policy_document.json}"
-}
-
-data "aws_iam_policy_document" "policy_document" {
-  statement {
-    effect    = "Allow"
-    actions   = ["s3:PutObject"]
-    resources = ["${aws_s3_bucket.bucket.arn}/*"]
-  }
+  project_prefix = "${var.project_prefix}"
+  bucket_arn     = "${module.recordings_s3_bucket.arn}"
 }
 
 data "archive_file" "lambda_zip_file" {

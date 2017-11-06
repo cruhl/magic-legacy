@@ -1,4 +1,7 @@
 .terraform
+terraform.tfstate
+terraform.tfstate.backup
+
 
 node_modules
 elm-stuff
@@ -9,4 +12,3 @@ build.zip
 *.log
 *.png
 *.tfvars
-terraform.tfstate*

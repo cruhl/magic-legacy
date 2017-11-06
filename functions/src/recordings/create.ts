@@ -13,7 +13,7 @@ const { RECORDINGS_S3_BUCKET_ID } = process.env;
 
 const s3 = new AWS.S3();
 
-export async function saveTwilioCall<ProxyHandler>(
+export async function createRecording<ProxyHandler>(
   event: APIGatewayEvent,
   context: Context,
   callback: ProxyCallback
@@ -36,12 +36,12 @@ export async function saveTwilioCall<ProxyHandler>(
   }
 
   try {
-    https.get(`${recordingUrl}.mp3?Download=true`, async response => {
+    https.get(`${recordingUrl}.mp3?Download=true`, async data => {
       const upload = await s3
         .upload({
           Bucket: `${RECORDINGS_S3_BUCKET_ID}`,
           Key: `${new Date().toISOString()}.mp3`,
-          Body: response
+          Body: data
         })
         .promise();
 

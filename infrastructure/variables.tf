@@ -1,14 +1,15 @@
-variable "access_key_id" {}
-variable "aws_secret_access_key" {}
+variable "aws_region" {
+  type = "string"
+}
 
-variable "region" {
-  default = "us-east-2"
+variable "google_project_id" {
+  type = "string"
 }
 
 variable "project_prefix" {
-  default = "cruhl-magic"
+  type = "string"
 }
 
 variable "api_stage" {
-  default = "prod"
+  type = "string"
 }

@@ -7,14 +7,14 @@ import {
 
 import { twiml } from "twilio";
 
-export function incomingTwilioCall<ProxyHandler>(
+const { API_URL, API_SAVE_RECORDING_PATH } = process.env;
+
+export function createCall<ProxyHandler>(
   event: APIGatewayEvent,
   context: Context,
   callback: ProxyCallback
 ) {
   const call = new twiml.VoiceResponse();
-
-  const { API_URL, API_SAVE_RECORDING_PATH } = process.env;
 
   call.record({
     recordingStatusCallback: `${API_URL}${API_SAVE_RECORDING_PATH}`

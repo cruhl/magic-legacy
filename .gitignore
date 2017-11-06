@@ -9,3 +9,4 @@ build.zip
 *.log
 *.png
 *.tfvars
+terraform.tfstate*

@@ -1,5 +1,14 @@
 provider "aws" {
-  region = "${var.region}"
+  region = "${var.aws_region}"
+}
+
+provider "google" {
+  region = "${var.aws_region}"
+}
+
+module "google_apis" {
+  source     = "./modules/google_apis"
+  project_id = "${var.google_project_id}"
 }
 
 module "recordings_s3_bucket" {
@@ -13,8 +22,8 @@ resource "aws_api_gateway_deployment" "api_deployment" {
 
   depends_on = [
     "module.api_gateway",
-    "module.incoming_twilio_call",
-    "module.save_twilio_call",
+    "module.create_call_lambda",
+    "module.create_recording_lambda",
   ]
 }
 
@@ -22,15 +31,15 @@ module "api_gateway" {
   source = "./modules/api_gateway"
 }
 
-module "incoming_twilio_call" {
+module "create_call_lambda" {
   source = "./modules/api_gateway_invoked_lambda"
 
   api_id      = "${module.api_gateway.id}"
   resource_id = "${module.api_gateway.calls_resource_id}"
   http_method = "${module.api_gateway.calls_http_method}"
 
-  name        = "incoming-twilio-call"
-  handler     = "index.incomingTwilioCall"
+  name        = "create-call"
+  handler     = "index.createCall"
   source_hash = "${data.archive_file.lambda_zip_file.output_base64sha256}"
 
   environment_variables = {
@@ -38,7 +47,7 @@ module "incoming_twilio_call" {
     API_SAVE_RECORDING_PATH = "${module.api_gateway.recordings_path}"
   }
 
-  region   = "${var.region}"
+  region   = "${var.aws_region}"
   role_arn = "${aws_iam_role.lambda_allow_assume_role.arn}"
 }
 
@@ -51,22 +60,22 @@ module "lambda_trust_document" {
   source = "./modules/lambda_trust_document"
 }
 
-module "save_twilio_call" {
+module "create_recording_lambda" {
   source = "./modules/api_gateway_invoked_lambda"
 
   api_id      = "${module.api_gateway.id}"
   resource_id = "${module.api_gateway.recordings_resource_id}"
   http_method = "POST"
 
-  name        = "save-twilio-call"
-  handler     = "index.saveTwilioCall"
+  name        = "create-recording"
+  handler     = "index.createRecording"
   source_hash = "${data.archive_file.lambda_zip_file.output_base64sha256}"
 
   environment_variables = {
     RECORDINGS_S3_BUCKET_ID = "${module.recordings_s3_bucket.id}"
   }
 
-  region   = "${var.region}"
+  region   = "${var.aws_region}"
   role_arn = "${module.role_for_recordings_uploads.arn}"
 }
 

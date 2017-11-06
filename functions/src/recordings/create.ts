@@ -36,11 +36,11 @@ export async function createRecording<ProxyHandler>(
   }
 
   try {
-    https.get(`${recordingUrl}.mp3?Download=true`, async data => {
+    https.get(`${recordingUrl}.wav?Download=true`, async data => {
       const upload = await s3
         .upload({
           Bucket: `${RECORDINGS_S3_BUCKET_ID}`,
-          Key: `${new Date().toISOString()}.mp3`,
+          Key: `${new Date().toISOString()}.wav`,
           Body: data
         })
         .promise();

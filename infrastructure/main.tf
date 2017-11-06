@@ -43,7 +43,7 @@ module "create_call_lambda" {
   source_hash = "${data.archive_file.lambda_zip_file.output_base64sha256}"
 
   environment_variables = {
-    API_URL                 = "https://ozhzxmq19c.execute-api.us-east-2.amazonaws.com/${var.api_stage}"
+    API_URL                 = "https://whyokm327k.execute-api.us-east-2.amazonaws.com/${var.api_stage}"
     API_SAVE_RECORDING_PATH = "${module.api_gateway.recordings_path}"
   }
 

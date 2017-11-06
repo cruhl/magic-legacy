@@ -10,7 +10,8 @@ resource "aws_lambda_function" "lambda" {
 
   role = "${var.role_arn}"
 
-  environment = {
-    variables = "${var.environment_variables}"
-  }
+  # environment = {
+  #   variables = "${var.environment_variables}"
+  # }
 }
+

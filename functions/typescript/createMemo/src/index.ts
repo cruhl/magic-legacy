@@ -15,13 +15,13 @@ export async function createMemo<Handler>(
 
 const mockEvent = {
   s3: {
-    bucket: { name: "cruhl-magic-recordings" },
+    bucket: { name: "cruhl-science-recordings" },
     object: { key: "2017-11-06T22:32:08.351Z.wav" }
   }
 };
 
 const speechClient = new speech({
-  projectId: "cruhl-magic-recordings"
+  projectId: "cruhl-science-recordings"
 });
 
 (async (callback: (err: string) => void) => {

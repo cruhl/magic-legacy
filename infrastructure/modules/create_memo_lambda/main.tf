@@ -14,4 +14,3 @@ resource "aws_lambda_function" "lambda" {
   #   variables = "${var.environment_variables}"
   # }
 }
-

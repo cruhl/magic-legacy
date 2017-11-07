@@ -16,7 +16,7 @@ export async function createMemo<Handler>(
 const mockEvent = {
   s3: {
     bucket: { name: "cruhl-magic-recordings" },
-    object: { key: "2017-11-06T20:46:06.311Z.mp3" }
+    object: { key: "2017-11-06T22:32:08.351Z.wav" }
   }
 };
 

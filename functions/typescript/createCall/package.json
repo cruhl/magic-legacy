@@ -1,0 +1,19 @@
+{
+  "name": "cruhl-magic-create-call",
+  "version": "1.0.0",
+  "description": "Lambda function for handling incoming requests from twilio and generating call twiml which includes the recording callback URL.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cruhl/magic.git"
+  },
+  "main": "build/index.js",
+  "author": "cruhl",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/aws-lambda": "0.0.19",
+    "@types/node": "^8.0.49"
+  },
+  "dependencies": {
+    "twilio": "^3.9.2"
+  }
+}

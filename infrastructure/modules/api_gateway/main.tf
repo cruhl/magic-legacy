@@ -1,5 +1,5 @@
 resource "aws_api_gateway_rest_api" "api" {
-  name = "api"
+  name = "${var.project_prefix}-api"
 }
 
 resource "aws_api_gateway_resource" "calls" {

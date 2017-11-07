@@ -1,0 +1,28 @@
+{
+  "name": "cruhl-magic-typescript-tooling",
+  "version": "1.0.0",
+  "description": "This contains all of the tooling for the typescript lambdas.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cruhl/magic.git"
+  },
+  "main": "build/index.js",
+  "scripts": {
+    "build": "npm run clean && webpack",
+    "clean": "rimraf $FUNCTION/build $FUNCTION/build.zip",
+    "build:createCall": "FUNCTION=createCall npm run build",
+    "build:createMemo": "FUNCTION=createMemo npm run build",
+    "build:createRecording": "FUNCTION=createRecording npm run build",
+    "clean:createCall": "FUNCTION=createCall npm run clean",
+    "clean:createMemo": "FUNCTION=createCall npm run clean",
+    "clean:createRecording": "FUNCTION=createCall npm run clean"
+  },
+  "author": "cruhl",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "rimraf": "^2.6.2",
+    "ts-loader": "^3.1.1",
+    "typescript": "^2.6.1",
+    "webpack": "^3.8.1"
+  }
+}

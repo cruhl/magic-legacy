@@ -4,7 +4,7 @@ const { FUNCTION } = process.env;
 
 if (!FUNCTION) {
   throw new Error(
-    'The function name (i.e. createCall) must be passed in via environment variable "FUNCTION"!'
+    'The function name (i.e. createCall) must be passed in via an environment variable named "FUNCTION"!'
   );
 }
 
@@ -21,6 +21,7 @@ module.exports = {
           {
             loader: "ts-loader",
             options: {
+              configFile: path.resolve(__dirname, `${FUNCTION}/tsconfig.json`),
               onlyCompileBundledFiles: true
             }
           }

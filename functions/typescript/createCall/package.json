@@ -11,7 +11,7 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "@types/aws-lambda": "0.0.19",
-    "@types/node": "^8.0.49"
+    "@types/node": "^8.0.50"
   },
   "dependencies": {
     "twilio": "^3.9.2"

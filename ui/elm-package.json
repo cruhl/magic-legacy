@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "summary": "ui for magic",
-  "repository": "https://github.com/cruhl/magic.git",
+  "summary": "ui for science",
+  "repository": "https://github.com/cruhl/science.git",
   "license": "ISC",
   "source-directories": ["./src/elm/"],
   "exposed-modules": [],

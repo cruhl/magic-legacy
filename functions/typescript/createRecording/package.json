@@ -1,10 +1,10 @@
 {
-  "name": "cruhl-magic-create-call",
+  "name": "cruhl-science-create-call",
   "version": "1.0.0",
   "description": "Lambda function for taking recording callbacks from twilio and storing the file in S3.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cruhl/magic.git"
+    "url": "https://github.com/cruhl/science.git"
   },
   "main": "build/index.js",
   "author": "cruhl",

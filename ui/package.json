@@ -1,7 +1,7 @@
 {
-  "name": "magic-ui",
+  "name": "science-ui",
   "main": "build/index.js",
-  "description": "ui for magic",
+  "description": "ui for science",
   "version": "1.0.0",
   "scripts": {
     "dev": "webpack-dev-server --host 0.0.0.0 --port 8000",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com:cruhl/magic.git"
+    "url": "ssh://git@github.com:cruhl/science.git"
   },
   "license": "ISC",
   "devDependencies": {

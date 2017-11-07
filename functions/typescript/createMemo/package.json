@@ -1,10 +1,10 @@
 {
-  "name": "cruhl-magic-create-memo",
+  "name": "cruhl-science-create-memo",
   "version": "1.0.0",
   "description": "TODO",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cruhl/magic.git"
+    "url": "https://github.com/cruhl/science.git"
   },
   "main": "build/index.js",
   "author": "cruhl",

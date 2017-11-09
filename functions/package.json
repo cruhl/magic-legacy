@@ -1,0 +1,33 @@
+{
+  "name": "cruhl-magic-typescript-tooling",
+  "version": "1.0.0",
+  "description": "This contains all of the tooling for the typescript lambdas.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cruhl/magic.git"
+  },
+  "main": "build/index.js",
+  "scripts": {
+    "clean": "rm -rf $FUNCTION/build $FUNCTION/build.zip",
+    "copyBin": "cp -rf $FUNCTION/src/bin $FUNCTION/build",
+    "build": "npm run clean && webpack",
+    "build:createCall": "FUNCTION=createCall npm run build",
+    "build:createMemo":
+      "FUNCTION=createMemo npm run build && FUNCTION=createMemo npm run copyBin",
+    "build:createRecording": "FUNCTION=createRecording npm run build",
+    "dev":
+      "nodemon --watch \"$FUNCTION/src/**/*.ts\" --exec \"ts-node --project $FUNCTION/\" $FUNCTION/src/index.ts",
+    "dev:createCall": "FUNCTION=createCall npm run dev",
+    "dev:createMemo": "FUNCTION=createMemo npm run dev",
+    "dev:createRecording": "FUNCTION=createRecording npm run dev"
+  },
+  "author": "cruhl",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "nodemon": "^1.12.1",
+    "ts-loader": "^3.1.1",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1",
+    "webpack": "^3.8.1"
+  }
+}

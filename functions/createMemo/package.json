@@ -1,7 +1,7 @@
 {
-  "name": "cruhl-magic-create-call",
+  "name": "cruhl-magic-create-memo",
   "version": "1.0.0",
-  "description": "Lambda function for handling incoming requests from twilio and generating call twiml which includes the recording callback URL.",
+  "description": "TODO",
   "repository": {
     "type": "git",
     "url": "https://github.com/cruhl/magic.git"
@@ -9,11 +9,13 @@
   "main": "build/index.js",
   "author": "cruhl",
   "license": "UNLICENSED",
+  "dependencies": {
+    "@google-cloud/speech": "^0.11.0",
+    "aws-sdk": "^2.147.0",
+    "tmp-promise": "^1.0.4"
+  },
   "devDependencies": {
     "@types/aws-lambda": "0.0.19",
     "@types/node": "^8.0.50"
-  },
-  "dependencies": {
-    "twilio": "^3.9.2"
   }
 }

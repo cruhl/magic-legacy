@@ -3,12 +3,6 @@ import { Handler, S3EventRecord, Context, Callback } from "aws-lambda";
 import * as AWS from "aws-sdk";
 import * as speech from "@google-cloud/speech";
 
-import { exec } from "child_process";
-import * as path from "path";
-import * as tmp from "tmp-promise";
-import * as fs from "fs";
-import { promisify } from "util";
-
 const { GOOGLE_PROJECT_ID } = process.env;
 
 const s3 = new AWS.S3();
@@ -21,7 +15,7 @@ const speechClient = new speech.SpeechClient({
 const mockEvent = {
   s3: {
     bucket: { name: "cruhl-magic-recordings" },
-    object: { key: "2017-11-08T16:23:00.149Z.wav" }
+    object: { key: "RE4468de0af589e04fc78c2ab8574bf73d.wav" }
   }
 };
 
@@ -32,37 +26,16 @@ const mockEvent = {
     .getObject({ Bucket: bucket.name, Key: object.key })
     .promise();
 
-  const wavFile = await tmp.file({ postfix: ".wav" });
-  const flacFile = await tmp.file({ postfix: ".flac" });
-
-  await promisify(fs.writeFile)(wavFile.path, recording);
-  await promisify(exec)(
-    `${path.resolve(
-      __dirname,
-      "bin/sox-14.4.2"
-    )} ${wavFile.path} ${flacFile.path}`
-  );
-
-  const recordingFile = await promisify(fs.readFile)(flacFile.path);
-  const recordingBytes = recordingFile.toString("base64");
-
   const speechResponse = await speechClient.recognize({
-    audio: {
-      content: recordingBytes
-    },
+    audio: { content: recording },
     config: {
-      encoding: "FLAC",
+      encoding: "LINEAR16",
       sampleRateHertz: 8000,
       languageCode: "en-US"
     }
   });
 
-  const response = speechResponse[0];
-  const transcription = response.results
-    .map((result: any) => result.alternatives[0].transcript)
-    .join("\n");
-
-  console.log(`Transcription: ${transcription}`);
+  console.log(JSON.stringify(speechResponse));
 
   callback();
 })(() => {});

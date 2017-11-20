@@ -9,11 +9,9 @@
   "main": "build/index.js",
   "scripts": {
     "clean": "rm -rf $FUNCTION/build $FUNCTION/build.zip",
-    "copyBin": "cp -rf $FUNCTION/src/bin $FUNCTION/build",
     "build": "npm run clean && webpack",
     "build:createCall": "FUNCTION=createCall npm run build",
-    "build:createMemo":
-      "FUNCTION=createMemo npm run build && FUNCTION=createMemo npm run copyBin",
+    "build:createMemo": "FUNCTION=createMemo npm run build",
     "build:createRecording": "FUNCTION=createRecording npm run build",
     "dev":
       "nodemon --watch \"$FUNCTION/src/**/*.ts\" --exec \"ts-node --project $FUNCTION/\" $FUNCTION/src/index.ts",

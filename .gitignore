@@ -2,6 +2,7 @@
 *.tfvars
 terraform.tfstate*
 
+misc
 node_modules
 elm-stuff
 
@@ -9,3 +10,5 @@ build*
 
 *.log
 *.png
+*.csv
+*.wav

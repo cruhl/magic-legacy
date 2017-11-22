@@ -1,0 +1,23 @@
+{
+  "name": "cruhl-magic-local-tools",
+  "version": "1.0.0",
+  "description": "For any quick and dirty local iteration.",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cruhl/magic.git"
+  },
+  "author": "cruhl",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/cruhl/magic/issues"
+  },
+  "homepage": "https://github.com/cruhl/magic#readme",
+  "devDependencies": {
+    "@types/node": "^8.0.53",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1"
+  }
+}

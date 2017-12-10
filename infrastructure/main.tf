@@ -6,13 +6,8 @@ provider "google" {
   region = "${var.google_region}"
 }
 
-module "google_apis" {
-  source     = "./modules/google_apis"
-  project_id = "${var.google_project_id}"
-}
-
-module "recordings_s3_bucket" {
-  source         = "./modules/recordings_s3_bucket"
+module "call_recordings_s3_bucket" {
+  source         = "./modules/call_recordings_s3_bucket"
   project_prefix = "${var.project_prefix}"
 }
 
@@ -30,13 +25,13 @@ module "api" {
   region    = "${var.aws_region}"
   api_stage = "${var.api_stage}"
 
-  recordings_s3_bucket_id  = "${module.recordings_s3_bucket.id}"
-  recordings_s3_bucket_arn = "${module.recordings_s3_bucket.arn}"
+  recordings_s3_bucket_id  = "${module.call_recordings_s3_bucket.id}"
+  recordings_s3_bucket_arn = "${module.call_recordings_s3_bucket.arn}"
 }
 
 module "create_memo_lambda" {
   source = "./modules/create_memo_lambda"
 
-  recordings_s3_bucket_id  = "${module.recordings_s3_bucket.id}"
-  recordings_s3_bucket_arn = "${module.recordings_s3_bucket.arn}"
+  recordings_s3_bucket_id  = "${module.call_recordings_s3_bucket.id}"
+  recordings_s3_bucket_arn = "${module.call_recordings_s3_bucket.arn}"
 }

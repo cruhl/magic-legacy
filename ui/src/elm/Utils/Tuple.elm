@@ -2,6 +2,6 @@ module Utils.Tuple exposing ((=>))
 
 
 infixl 0 =>
-(=>) : a -> b -> ( a, b )
-(=>) =
-    (,)
+(=>) : first -> second -> ( first, second )
+(=>) first second =
+    ( first, second )

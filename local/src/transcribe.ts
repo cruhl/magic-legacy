@@ -1,32 +1,31 @@
 import * as fs from "fs";
 import { promisify } from "util";
 
-import * as speech from "@google-cloud/speech";
+import * as AWS from "aws-sdk";
+
+var lex = new AWS.LexRuntime({ region: "us-east-1" });
 
 const wavFolder = "data/wav";
 
-const speechClient = new speech.SpeechClient({ projectId: "cruhl-magic-app" });
-
 (async function main() {
   fs.readdirSync(wavFolder).forEach((filePath, index, filePaths) => {
-    transcribe(filePath);
+    if (index % 5 == 0) transcribe(filePath);
   });
 })();
 
-function transcribe(filePath: string) {
-  const request = {
-    config: {
-      encoding: "LINEAR16",
-      sampleRateHertz: 8000,
-      languageCode: "en-US"
-    },
-    interimResults: false
-  };
+async function transcribe(filePath: string) {
+  const audioData = fs.readFileSync(`${wavFolder}/${filePath}`);
 
-  const recognizeStream = speechClient
-    .streamingRecognize(request)
-    .on("error", console.error)
-    .on("data", (data: any) => console.log(JSON.stringify(data)));
+  const lexResponse = await lex
+    .postContent({
+      botAlias: "$LATEST",
+      botName: "magic",
+      contentType: "audio/x-l16; sample-rate=8000; channel-count=1",
+      inputStream: audioData,
+      userId: "cruhl-magic-test-user",
+      accept: "text/plain; charset=utf-8"
+    })
+    .promise();
 
-  fs.createReadStream(`${wavFolder}/${filePath}`).pipe(recognizeStream);
+  console.log(lexResponse);
 }

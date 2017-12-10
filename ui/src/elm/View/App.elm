@@ -1,90 +1,84 @@
 module View.App exposing (view)
 
-import Color exposing (Color)
-import Dict
+import Date exposing (Date)
+import Date.Format as Date
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import List.Extra as List
 import State.Model exposing (Model)
-import String
-import Types.Light as Light exposing (Light)
+import Time exposing (Time)
+import Types.Event as Event
 import Utils.Tuple exposing ((=>))
 
 
 view : Model -> Html msg
-view { lights } =
-    div [ class "app" ]
-        [ lights
-            |> Dict.toList
-            |> List.map light
-            |> List.concat
-            |> List.append [ div [ class "background" ] [] ]
-            |> div [ class "scene" ]
-        ]
+view spans =
+    case ( List.head spans, List.last spans ) of
+        ( Just first, Just last ) ->
+            let
+                start =
+                    first
+                        |> .start
+                        |> Date.toTime
 
+                end =
+                    last
+                        |> .end
+                        |> Date.toTime
 
-light : ( String, Light ) -> List (Html msg)
-light ( id, { status, position, color } ) =
-    let
-        lightElement attributes =
-            div <|
-                [ title id
-                , style
-                    [ "top" => toString position.y ++ "px"
-                    , "left" => toString position.x ++ "px"
+                duration =
+                    end - start
+            in
+            div [ class "app" ]
+                [ div [ class "timeline" ]
+                    [ spans
+                        |> List.map (span start duration)
+                        |> div [ class "spans" ]
+                    , timestamps start duration
                     ]
                 ]
-                    ++ attributes
 
-        overlay attributes =
-            lightElement <| [ class "overlay" ] ++ attributes
-    in
-    case status of
-        Light.Enabled ->
-            let
-                { red, blue, green, alpha } =
-                    Color.toRgb <|
-                        if status /= Light.Enabled then
-                            Color.rgba 255 255 255 0.3
-                        else
-                            color
-
-                colorCss =
-                    [ toFloat red
-                    , toFloat green
-                    , toFloat blue
-                    , alpha
-                    ]
-                        |> List.map toString
-                        |> List.intersperse ", "
-                        |> String.concat
-                        |> (\values -> "rgba(" ++ values ++ ")")
-
-                background =
-                    style [ "background" => colorCss ]
-            in
-            [ lightElement [ class "bulb", background ] []
-            , lightElement [ class "glow", glow colorCss ] []
-            , overlay [] []
-            ]
-
-        Light.Disabled ->
-            [ overlay [ class "disabled" ] [] ]
+        _ ->
+            text "No spans!"
 
 
-glow : String -> Html.Attribute msg
-glow colorCss =
+span : Time -> Time -> Event.Span -> Html msg
+span timelineStart timelineDuration { start, end } =
     let
-        shadowRadius =
-            170
+        startTime =
+            Date.toTime start
 
-        spreadAmount =
-            0.3
+        left =
+            (startTime - timelineStart) / timelineDuration
 
-        shadowPositioning =
-            "0 0 "
-                ++ toString shadowRadius
-                ++ "px "
-                ++ toString (shadowRadius * spreadAmount)
-                ++ "px"
+        width =
+            (Date.toTime end - startTime) / timelineDuration
+
+        toPercent ratio =
+            toString (ratio * 100) ++ "%"
+
+        positioning =
+            style
+                [ "left" => toPercent left
+                , "width" => toPercent width
+                ]
     in
-    style [ "box-shadow" => shadowPositioning ++ " " ++ colorCss ]
+    div [ class "span", positioning ] []
+
+
+timestamps : Time -> Time -> Html msg
+timestamps timelineStart timelineDuration =
+    [ timelineStart
+    , timelineStart + timelineDuration / 2
+    , timelineStart + timelineDuration
+    ]
+        |> List.map (Date.fromTime >> timestamp)
+        |> div [ class "timestamps" ]
+
+
+timestamp : Date -> Html msg
+timestamp date =
+    div []
+        [ div [ class "date" ] [ text (Date.format "%A, %B %e, %Y" date) ]
+        , div [ class "time" ] [ text (Date.format "%l:%M:%S %P" date) ]
+        ]

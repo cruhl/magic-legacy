@@ -1,10 +1,40 @@
 import * as fs from "fs";
 import * as https from "https";
 
-const csv = fs.readFileSync("data/recordings.csv");
+const csv = fs.readFileSync("data/calls.csv");
 const lines = csv.toString().split("\n");
 
-lines.forEach((line, index) => setTimeout(() => download(line), index * 250));
+// remove headers
+lines.shift();
+lines.pop();
+
+const recordings = lines.map(line => {
+  const [
+    sid,
+    accountSid,
+    callSid,
+    duration,
+    flag1,
+    flag2,
+    price,
+    apiVersion,
+    status,
+    dateDeleted,
+    channels,
+    source,
+    dateCreated,
+    dateUpdated
+  ] = line.split(",");
+
+  const start = new Date(dateCreated).getTime();
+  const end = start + parseInt(duration) * 1000;
+
+  return { start, end };
+});
+
+fs.writeFileSync("data/calls.json", JSON.stringify(recordings));
+
+// lines.forEach((line, index) => setTimeout(() => download(line), index * 500));
 
 function download(line: any) {
   const [
@@ -24,22 +54,25 @@ function download(line: any) {
     dateUpdated
   ] = line.split(",");
 
-  if (sid == "Sid" || !dateCreated) return;
-
   const fileName = `data/wav/${new Date(dateCreated).toISOString()}.wav`;
-  const file = fs.createWriteStream(fileName);
+  const fileStream = fs.createWriteStream(fileName);
 
-  https.get(
-    `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Recordings/${sid}.wav?Download=true`,
-    response => {
-      response
-        .on("data", data => {
-          file.write(data);
-        })
-        .on("end", () => {
-          file.end();
-          console.log({ fileName, duration });
-        });
-    }
-  );
+  const uri = [
+    `https://api.twilio.com/2010-04-01/Accounts/`,
+    accountSid,
+    "/Recordings/",
+    sid,
+    ".wav?Download=true"
+  ].join("");
+
+  https.get(uri, response => {
+    response
+      .on("data", data => {
+        fileStream.write(data);
+      })
+      .on("end", () => {
+        fileStream.end();
+        console.log({ fileName, duration: parseInt(duration) });
+      });
+  });
 }

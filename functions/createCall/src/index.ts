@@ -17,7 +17,9 @@ export function createCall<ProxyHandler>(
   const call = new twiml.VoiceResponse();
 
   call.record({
-    recordingStatusCallback: `${API_URL}${API_SAVE_RECORDING_PATH}`
+    recordingStatusCallback: `${API_URL}${API_SAVE_RECORDING_PATH}`,
+    playBeep: false,
+    trim: "trim-silence"
   });
 
   call.hangup();

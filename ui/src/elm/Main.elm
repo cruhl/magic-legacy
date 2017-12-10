@@ -1,17 +1,17 @@
 module Main exposing (main)
 
-import Html exposing (program)
+import Html
 import State.Model exposing (Model, init)
 import State.Msg exposing (Msg)
 import State.Update exposing (update)
 import View.App exposing (view)
 
 
-main : Program Never Model Msg
+main : Program String Model Msg
 main =
-    program
+    Html.programWithFlags
         { init = init
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = always Sub.none
         , update = update
         , view = view
         }

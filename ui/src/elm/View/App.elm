@@ -26,6 +26,12 @@ viewTimeline { start, end, spans } =
         [ spans
             |> List.map (span start duration)
             |> div [ class "spans" ]
+        , spans
+            |> List.map (span start duration)
+            |> div [ class "spans" ]
+        , spans
+            |> List.map (span start duration)
+            |> div [ class "spans" ]
         , timestamps start duration
         ]
 
@@ -48,7 +54,10 @@ span timelineStart timelineDuration { start, end } =
 
 timestamps : Time -> Time -> Html msg
 timestamps start duration =
-    [ start, start + duration / 2, start + duration ]
+    [ start
+    , start + duration / 2
+    , start + duration
+    ]
         |> List.map (Date.fromTime >> timestamp)
         |> div [ class "timestamps" ]
 

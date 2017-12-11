@@ -1,31 +1,37 @@
+$violet: hsl(245, 70%, 60%);
+
+$text: lighten($violet, 30%);
+
 html,
 body {
   margin: 0;
   padding: 0;
 
-  background: black;
+  background: adjust-color($color: $violet, $saturation: -0%, $lightness: -0%);
 
   font-family: "Barlow Semi Condensed";
   font-weight: 300;
   font-size: 20px;
-  color: white;
+  color: $text;
 }
 
 .app {
   .timeline {
     position: relative;
-    // width: 516870000px;
 
     .spans {
       position: relative;
-      height: 400px;
+      height: 3em;
+      margin: 1em 0;
+
       .span {
         position: absolute;
         top: 0;
         bottom: 0;
         min-width: 1px;
 
-        background: hsl(255.9, 86.3%, 51.2%);
+        background: url("https://i.imgur.com/MFT6PN3.png");
+        background-size: auto 100%;
       }
     }
     .timestamps {
@@ -36,10 +42,12 @@ body {
         padding: 1em;
         .date {
           font-size: 1.3em;
+          color: darken($text, 5%);
         }
 
         .time {
-          font-size: 1.6em;
+          font-size: 1.8em;
+          color: lighten($text, 5%);
         }
       }
     }

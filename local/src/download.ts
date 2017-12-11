@@ -34,7 +34,7 @@ const recordings = lines.map(line => {
 
 fs.writeFileSync("data/calls.json", JSON.stringify(recordings));
 
-// lines.forEach((line, index) => setTimeout(() => download(line), index * 500));
+lines.forEach((line, index) => setTimeout(() => download(line), index * 500));
 
 function download(line: any) {
   const [

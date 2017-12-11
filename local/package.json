@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ts-node src/$SCRIPT.ts",
     "start:download": "SCRIPT=download npm run start",
-    "start:transcribe": "SCRIPT=transcribe npm run start"
+    "start:transcribe": "node src/transcribe.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "typescript": "^2.6.1"
   },
   "dependencies": {
-    "aws-sdk": "^2.156.0"
+    "aws-sdk": "^2.156.0",
+    "watson-developer-cloud": "^3.0.2"
   }
 }

@@ -3,6 +3,7 @@ module State.Model exposing (Model, init)
 import Date
 import Json.Decode as Decode exposing (Decoder)
 import State.Msg exposing (Msg)
+import Time exposing (Time)
 import Types.Event as Event
 import Types.Timeline exposing (Timeline)
 import Utils.Tuple exposing ((=>))
@@ -14,26 +15,28 @@ type alias Model =
 
 init : String -> ( Model, Cmd Msg )
 init callsJson =
-    case callsJson |> Decode.decodeString (Decode.list decodeSpan) of
-        Ok calls ->
-            let
-                ( start, end ) =
-                    ( toDate "October 4, 2017"
-                    , toDate "December 10, 2017"
-                    )
+    let
+        timeline =
+            callsJson
+                |> Decode.decodeString (Decode.list decodeSpan)
+                |> Result.withDefault []
+                |> List.reverse
+                |> Timeline start end
 
-                toDate =
-                    Date.fromString
-                        >> Result.withDefault (Date.fromTime 0)
-                        >> Date.toTime
+        -- 2017-12-10T04:40:53.000Z.wav
+        ( start, end ) =
+            ( 1512880850000
+            , 1512880850000 + 1 * Time.minute
+            )
+    in
+    Model timeline => Cmd.none
 
-                timeline =
-                    Timeline start end (List.reverse calls)
-            in
-            Model timeline => Cmd.none
 
-        Err err ->
-            Debug.crash err
+toTime : String -> Time
+toTime =
+    Date.fromString
+        >> Result.withDefault (Date.fromTime 0)
+        >> Date.toTime
 
 
 decodeSpan : Decoder Event.Span

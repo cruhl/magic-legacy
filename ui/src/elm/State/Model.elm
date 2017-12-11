@@ -1,25 +1,36 @@
 module State.Model exposing (Model, init)
 
-import Date exposing (Date)
+import Date
 import Json.Decode as Decode exposing (Decoder)
 import State.Msg exposing (Msg)
 import Types.Event as Event
+import Types.Timeline exposing (Timeline)
 import Utils.Tuple exposing ((=>))
 
 
 type alias Model =
-    List Event.Span
+    { timeline : Timeline }
 
 
 init : String -> ( Model, Cmd Msg )
 init callsJson =
     case callsJson |> Decode.decodeString (Decode.list decodeSpan) of
         Ok calls ->
-            calls
-                |> List.reverse
-                |> List.drop 1600
-                |> List.take 500
-                => Cmd.none
+            let
+                ( start, end ) =
+                    ( toDate "October 4, 2017"
+                    , toDate "December 10, 2017"
+                    )
+
+                toDate =
+                    Date.fromString
+                        >> Result.withDefault (Date.fromTime 0)
+                        >> Date.toTime
+
+                timeline =
+                    Timeline start end (List.reverse calls)
+            in
+            Model timeline => Cmd.none
 
         Err err ->
             Debug.crash err
@@ -28,34 +39,5 @@ init callsJson =
 decodeSpan : Decoder Event.Span
 decodeSpan =
     Decode.map2 Event.Span
-        (Decode.field "start" decodeDate)
-        (Decode.field "end" decodeDate)
-
-
-decodeDate : Decoder Date
-decodeDate =
-    Decode.float |> Decode.map Date.fromTime
-
-
-
--- decodeCall : Decoder Call
--- decodeCall =
---     Decode.map2 Call
---         (Decode.field "price" Decode.float)
---         (Decode.field "audio" decodeAudio)
--- decodeAudio : Decoder Audio
--- decodeAudio =
---     Decode.map2 Audio
---         (Decode.field "uri" Decode.string)
---         (Decode.field "speech" decodeSpeech)
--- decodeSpeech : Decoder Speech
--- decodeSpeech =
---     Decode.map2 Speech
---         (Decode.field "transcriptions" Decode.list decodeTranscription)
---         (Decode.field "speech" decodeSpeech)
--- decodeTranscription : Decoder Transcription
--- decodeTranscription =
---     Decode.map2 Transcription
---         (Decode.field "confidence" Decode.float)
---         (Decode.field "text" Decode.string)
---
+        (Decode.field "start" Decode.float)
+        (Decode.field "end" Decode.float)

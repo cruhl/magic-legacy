@@ -1,53 +1,76 @@
-$violet: hsl(245, 70%, 60%);
-
-$text: lighten($violet, 30%);
-
 html,
 body {
   margin: 0;
   padding: 0;
 
-  background: adjust-color($color: $violet, $saturation: -0%, $lightness: -0%);
+  background: black;
 
   font-family: "Barlow Semi Condensed";
   font-weight: 300;
   font-size: 20px;
-  color: $text;
+  color: white;
 }
 
 .app {
   .timeline {
     position: relative;
 
-    .spans {
-      position: relative;
-      height: 3em;
+    .events {
       margin: 1em 0;
 
-      .span {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        min-width: 1px;
+      > div {
+        position: relative;
+        height: 3em;
+        .event {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
 
-        background: url("https://i.imgur.com/MFT6PN3.png");
-        background-size: auto 100%;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          min-width: 1px;
+
+          // background: url("https://i.imgur.com/MFT6PN3.png");
+          // background-size: auto 100%;
+
+          color: white;
+
+          &.transcription {
+            background: white;
+            color: black;
+          }
+
+          &.speaker {
+            background: hsl(272.5, 86.6%, 67.4%);
+          }
+
+          &.word {
+            background: rgb(81, 111, 247);
+          }
+
+          > div {
+            margin-left: 1em;
+          }
+        }
       }
     }
+
     .timestamps {
       display: flex;
       flex-wrap: nowrap;
       justify-content: space-between;
+
       .timestamp {
         padding: 1em;
         .date {
+          opacity: 0.9;
           font-size: 1.3em;
-          color: darken($text, 5%);
         }
-
         .time {
-          font-size: 1.8em;
-          color: lighten($text, 5%);
+          opacity: 0.3;
+          font-size: 2.2em;
+          font-weight: 100;
         }
       }
     }

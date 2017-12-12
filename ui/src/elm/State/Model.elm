@@ -1,11 +1,11 @@
 module State.Model exposing (Model, init)
 
 import Date
+import Decode.Timeline
 import Json.Decode as Decode exposing (Decoder)
 import State.Msg exposing (Msg)
 import Time exposing (Time)
-import Types.Event as Event
-import Types.Timeline exposing (Timeline)
+import Types.Timeline as Timeline exposing (Timeline)
 import Utils.Tuple exposing ((=>))
 
 
@@ -18,15 +18,14 @@ init callsJson =
     let
         timeline =
             callsJson
-                |> Decode.decodeString (Decode.list decodeSpan)
-                |> Result.withDefault []
-                |> List.reverse
+                |> Decode.decodeString Decode.Timeline.data
+                |> Result.withDefault (Timeline.Data [] [] [] [] [])
                 |> Timeline start end
 
         -- 2017-12-10T04:40:53.000Z.wav
         ( start, end ) =
             ( 1512880850000
-            , 1512880850000 + 1 * Time.minute
+            , 1512880850000 + 5 * Time.second
             )
     in
     Model timeline => Cmd.none
@@ -37,10 +36,3 @@ toTime =
     Date.fromString
         >> Result.withDefault (Date.fromTime 0)
         >> Date.toTime
-
-
-decodeSpan : Decoder Event.Span
-decodeSpan =
-    Decode.map2 Event.Span
-        (Decode.field "start" Decode.float)
-        (Decode.field "end" Decode.float)

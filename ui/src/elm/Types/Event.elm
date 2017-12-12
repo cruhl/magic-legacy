@@ -1,33 +1,49 @@
-module Types.Event exposing (Span)
+module Types.Event
+    exposing
+        ( Audio
+        , Call
+        , Span
+        , Speaker
+        , Transcription
+        , Word
+        )
 
 import Time exposing (Time)
 
 
-type alias Event a =
-    { a | timing : Span }
-
-
-type alias Span =
-    { start : Time
-    , end : Time
+type alias Call =
+    { timing : Span
+    , from : String
+    , to : String
     }
 
 
-type alias Call =
-    Event { from : String, to : String }
-
-
 type alias Audio =
-    Event { timing : Span }
+    { timing : Span
+    , uri : String
+    }
 
 
 type alias Transcription =
-    Event { transcript : String, confidence : Float }
+    { timing : Span
+    , transcript : String
+    , confidence : Float
+    }
 
 
 type alias Speaker =
-    Event { index : Int, confidence : Float }
+    { timing : Span
+    , index : Int
+    , confidence : Float
+    }
 
 
 type alias Word =
-    Event { text : String, confidence : Float }
+    { timing : Span
+    , text : String
+    , confidence : Float
+    }
+
+
+type alias Span =
+    { start : Time, end : Time }

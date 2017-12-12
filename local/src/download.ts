@@ -29,7 +29,11 @@ const recordings = lines.map(line => {
   const start = new Date(dateCreated).getTime();
   const end = start + parseInt(duration) * 1000;
 
-  return { start, end };
+  return {
+    timing: { start, end },
+    from: "+16185205959",
+    to: "+13143251192"
+  };
 });
 
 fs.writeFileSync("data/calls.json", JSON.stringify(recordings));

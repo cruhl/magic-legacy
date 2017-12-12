@@ -25,7 +25,7 @@ init callsJson =
         -- 2017-12-10T04:40:53.000Z.wav
         ( start, end ) =
             ( 1512880850000
-            , 1512880850000 + 5 * Time.second
+            , 1512880850000 + 30 * Time.second
             )
     in
     Model timeline => Cmd.none

@@ -24,12 +24,23 @@ viewTimeline ({ start, end, data } as timeline) =
     in
     div [ class "timeline" ]
         [ div [ class "events" ]
-            [ transcriptions timeline data.transcriptions
+            [ audio timeline data.audio
+            , transcriptions timeline data.transcriptions
             , speakers timeline data.speakers
             , words timeline data.words
             ]
         , timestamps start duration
         ]
+
+
+audio : Timeline -> List Event.Audio -> Html msg
+audio timeline =
+    let
+        recording { timing } =
+            event [ class "recording", positioning timeline timing ]
+                [ div [ class "waveform" ] [] ]
+    in
+    div [ class "audio" ] << List.map recording
 
 
 transcriptions : Timeline -> List Event.Transcription -> Html msg

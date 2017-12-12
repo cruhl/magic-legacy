@@ -20,7 +20,7 @@ body {
 
       > div {
         position: relative;
-        height: 3em;
+        height: 5em;
         .event {
           display: flex;
           align-items: center;
@@ -31,10 +31,18 @@ body {
           bottom: 0;
           min-width: 1px;
 
-          // background: url("https://i.imgur.com/MFT6PN3.png");
-          // background-size: auto 100%;
-
           color: white;
+
+          &.recording {
+            background: rgba(245, 75, 106, 0.8);
+            .waveform {
+              height: 60%;
+              width: 100%;
+              opacity: 0.8;
+              background: url("https://i.imgur.com/MFT6PN3.png");
+              background-size: auto 100%;
+            }
+          }
 
           &.transcription {
             background: white;
@@ -49,7 +57,7 @@ body {
             background: rgb(81, 111, 247);
           }
 
-          > div {
+          > div:not(.waveform) {
             margin-left: 1em;
           }
         }

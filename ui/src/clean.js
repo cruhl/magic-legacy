@@ -1,5 +1,5 @@
-const start = 1512880850000;
-const end = start + 53 * 1000;
+const start = 1512880853000;
+const end = start + 51 * 1000;
 
 module.exports = data => {
   const { results, speaker_labels } = data;

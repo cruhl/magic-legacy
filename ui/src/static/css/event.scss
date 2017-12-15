@@ -1,0 +1,26 @@
+@mixin event {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+
+  background: white;
+
+  &.call {
+  }
+
+  &.recording {
+  }
+
+  &.transcription {
+  }
+
+  &.speaker {
+  }
+
+  &.word {
+  }
+}

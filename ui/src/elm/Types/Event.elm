@@ -46,4 +46,6 @@ type alias Word =
 
 
 type alias Span =
-    { start : Time, end : Time }
+    { start : Time
+    , end : Time
+    }

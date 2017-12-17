@@ -42,6 +42,10 @@ view ({ start, end, data } as timeline) =
         ]
 
 
+
+-- source : String ->
+
+
 timestamps : Time -> Time -> Html Msg
 timestamps start duration =
     [ start

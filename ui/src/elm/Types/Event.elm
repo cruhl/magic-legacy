@@ -2,8 +2,10 @@ module Types.Event
     exposing
         ( Audio
         , Call
-        , Span
+        , Event
         , Speaker
+        , TimeSpan
+        , Timing(..)
         , Transcription
         , Word
         )
@@ -11,41 +13,36 @@ module Types.Event
 import Time exposing (Time)
 
 
-type alias Call =
-    { timing : Span
-    , from : String
-    , to : String
-    }
+type alias Event a =
+    { a | timing : Timing }
 
 
-type alias Audio =
-    { timing : Span
-    , uri : String
-    }
+type Timing
+    = Instant Time
+    | Interval TimeSpan
 
 
-type alias Transcription =
-    { timing : Span
-    , transcript : String
-    , confidence : Float
-    }
-
-
-type alias Speaker =
-    { timing : Span
-    , index : Int
-    , confidence : Float
-    }
-
-
-type alias Word =
-    { timing : Span
-    , text : String
-    , confidence : Float
-    }
-
-
-type alias Span =
+type alias TimeSpan =
     { start : Time
     , end : Time
     }
+
+
+type alias Call =
+    Event { from : String, to : String }
+
+
+type alias Audio =
+    Event { uri : String }
+
+
+type alias Transcription =
+    Event { transcript : String, confidence : Float }
+
+
+type alias Speaker =
+    Event { index : Int, confidence : Float }
+
+
+type alias Word =
+    Event { text : String, confidence : Float }

@@ -50,13 +50,13 @@ word =
         (Decode.field "confidence" Decode.float)
 
 
-timing : Decoder Event.Span
+timing : Decoder Event.TimeSpan
 timing =
-    Decode.field "timing" span
+    Decode.field "timing" timeSpan
 
 
-span : Decoder Event.Span
-span =
-    Decode.map2 Event.Span
+timeSpan : Decoder Event.TimeSpan
+timeSpan =
+    Decode.map2 Event.TimeSpan
         (Decode.field "start" Decode.float)
         (Decode.field "end" Decode.float)

@@ -1,0 +1,61 @@
+# Phone call through Twilio
+type Call implements Event, Node {
+  from: PhoneNumber!
+  to: PhoneNumber!
+}
+
+# Audio
+type Audio implements Event, Node {
+  uri: Url!
+}
+
+# Full length transcription
+type Transcription implements Event, Prediction, Node {
+  transcript: String!
+}
+
+# Speakers are identified via an index (i.e. 0, 1, 2, etc.)
+type Speaker implements Event, Prediction, Node {
+  index: Int!
+}
+
+# Individually transcribed word
+type Word implements Event, Prediction, Node {
+  text: String!
+}
+
+# Some model's guess
+interface Prediction {
+  confidence: Float!
+}
+
+# Ensures every event has a timing
+interface Event {
+  timing: Timing!
+}
+
+# Events occur instantaneously or within some duration
+union Timing = Date | Interval
+
+# Intervals always have a start, but can have no end if ongoing
+type Interval {
+  start: DateTime!
+  end: DateTime
+}
+
+# Every node has an ID
+interface Node {
+  id: ID!
+}
+
+# ISO 8601 string representation of a date and time
+# Example: "2017-12-18T21:27:31Z"
+scalar DateTime
+
+# E.164 string representation of a phone number
+# Example: "+16124440122"
+scalar PhoneNumber
+
+# URL which includes the protocol and ending slash
+# Example: "https://www.google.com/"
+scalar Url

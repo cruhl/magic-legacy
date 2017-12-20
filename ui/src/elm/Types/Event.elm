@@ -14,7 +14,7 @@ import Time exposing (Time)
 
 
 type alias Event a =
-    { a | timing : Timing }
+    { timing : Timing, data : a }
 
 
 type Timing
